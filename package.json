@@ -1,0 +1,24 @@
+{
+  "name": "bAmazonManager",
+  "version": "1.0.0",
+  "description": "Amazon-like storefront with the MySQL",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avalor1991/bAmazonManager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/avalor1991/bAmazonManager/issues"
+  },
+  "homepage": "https://github.com/avalor1991/bAmazonManager#readme",
+  "dependencies": {
+    "inquirer": "^6.0.0",
+    "mysql": "^2.16.0"
+  }
+}

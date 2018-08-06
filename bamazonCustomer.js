@@ -16,12 +16,22 @@ connection.connect(function(err) {
 });
 
 function start() {
+  connection.query('SELECT * FROM products', function(err, res){
+    if(err) throw err;
+  
+    console.log('----------------------------------------------------------------------------------------------------');
+  
+    for(var i = 0; i<res.length;i++){
+      console.log("ID: " + res[i].itemID + " | " + "Product: " + res[i].productName + " | " + "Department: " + res[i].departmentName + " | " + "Price: " + res[i].price + " | " + "QTY: " + res[i].stockQuantity);
+      console.log('--------------------------------------------------------------------------------------------------');
+    }
+  
   inquirer
     .prompt([
       {
-        name: "buy_id",
+        name: "buyID",
         type: "input",
-        message: "ID of the product they would like to buy: ",
+        message: "What is the ID of the product you would like to purchase? :  ",
         validate: function(value) {
           if (isNaN(value) === false) {
             return true;
@@ -32,7 +42,7 @@ function start() {
       {
         name: "quant",
         type: "input",
-        message: "How many units of the product they would like to buy: ",
+        message: "How much would you like to purchase? : ",
         validate: function(value) {
           if (isNaN(value) === false) {
             return true;
@@ -43,23 +53,22 @@ function start() {
     ])
     .then(function(answer) {
 
-      // When we get the answer back, we can query the database for the result
-      console.log("You want to buy " + answer.quant + " items of "+ answer.buy_id);
-      connection.query("SELECT * FROM products WHERE item_id = ?",
-      [answer.buy_id],
-      function(error,res) {
-        if (error) throw error;
-        // for(i=0; i < res.length; i++){
-        //     console.log(res[i].position + " " + res[i].artist + " " + res[i].song + " " + res[i].year + " " + res[i].raw_total);
-        // }
-        console.log(res);
-        if (answer.quant<res[0].stock_quantity){
-          console.log("We have enaught of that product");
-        }else{
-          console.log("Insufficient quantity!");
-        }
-      });
-      connection.end();
-    });  
+      var whatToBuy = parseInt((answer.buyID)-1);
+      var howMuchToBuy = parseInt(answer.quant);
+      var pTotal = parseFloat(((res[whatToBuy].price)*howMuchToBuy).toFixed(2));
+      console.log(res[whatToBuy].stockQuantity);
+      if(res[whatToBuy].stockQuantity >= howMuchToBuy){
+  
+        console.log(res[whatToBuy].stockQuantity - howMuchToBuy);
+        console.log(answer.buyID);
+        connection.query("UPDATE products SET stockQuantity = ? WHERE itemID = ?", [(res[whatToBuy].stockQuantity - howMuchToBuy),answer.buyID], function(err, result){
+            if(err) throw (err);
+            console.log("Success! Your oder has been placed Your total is $" + pTotal.toFixed(2));
+            console.log("\n---------------------------------------------------------------------\n");
+        });  
+      } else {console.log("Sorry, there's not enough in stock!");}
 
+      connection.end();
+        });   
+});
 }
