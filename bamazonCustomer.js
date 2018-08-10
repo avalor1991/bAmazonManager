@@ -56,19 +56,32 @@ function start() {
       var whatToBuy = parseInt((answer.buyID)-1);
       var howMuchToBuy = parseInt(answer.quant);
       var pTotal = parseFloat(((res[whatToBuy].price)*howMuchToBuy).toFixed(2));
-      console.log(res[whatToBuy].stockQuantity);
       if(res[whatToBuy].stockQuantity >= howMuchToBuy){
   
-        console.log(res[whatToBuy].stockQuantity - howMuchToBuy);
-        console.log(answer.buyID);
         connection.query("UPDATE products SET stockQuantity = ? WHERE itemID = ?", [(res[whatToBuy].stockQuantity - howMuchToBuy),answer.buyID], function(err, result){
             if(err) throw (err);
-            console.log("Success! Your oder has been placed Your total is $" + pTotal.toFixed(2));
+            console.log("Success! Your oder has been placed. Your total is $" + pTotal.toFixed(2));
             console.log("\n---------------------------------------------------------------------\n");
         });  
-      } else {console.log("Sorry, there's not enough in stock!");}
+        connection.query('SELECT * FROM departments', function(err, deptRes){
+          if(err) throw err;
 
-      connection.end();
+          for(var i = 0; i < deptRes.length; i++){
+            if(deptRes[i].departmentName === res[whatToBuy].departmentName){
+              connection.query("UPDATE departments SET productSales = ? WHERE departmentName = ?", [((deptRes[i].productSales + pTotal).toFixed(2)),res[whatToBuy].departmentName], function(err, result){
+                if(err) throw (err);
+                console.log("Product Sales by Department was updated");
+                console.log("\n---------------------------------------------------------------------\n");
+                connection.end();
+              });
+            }
+          }
+       
+        });
+      
+      } else {console.log("Sorry, there's not enough in stock!");}
+      
+      
         });   
 });
 }
