@@ -10,19 +10,27 @@ CREATE TABLE products (
   departmentName VARCHAR(45) NOT NULL,
   price DECIMAL(10,2) NULL,
   stockQuantity INT NULL,
-  productSales INT NULL,
   PRIMARY KEY (itemID)
 );
 
 
 CREATE TABLE departments (
-  department_id MEDIUMINT AUTO_INCREMENT NOT NULL,
-  department_name VARCHAR(45) NOT NULL,
-  over_head_costs  INT NULL,
-  PRIMARY KEY (itemID)
+  departmentID MEDIUMINT AUTO_INCREMENT NOT NULL,
+  departmentName VARCHAR(45) NOT NULL,
+  overHeadCosts  DECIMAL(10,2) NOT NULL,
+  productSales DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (departmentID)
 );
 
-INSERT INTO products (productName, departmentName, price, stockQuantity, productSales)
+INSERT INTO departments (departmentName, overHeadCosts, productSales)
+VALUES	("office", 1500.00, 3000.00),
+		("produce", 1000.00, 2000.00),
+        ("electronics", 5000.00, 6000.00),
+        ("toys", 2000.00, 5000.00),
+        ("drinks", 1400.00, 1800.00),
+        ("cleaning",1700.00, 4500.00);
+
+INSERT INTO products (productName, departmentName, price, stockQuantity)
 VALUES ("pencile","office", 2.50, 100),
 		("pen","office", 1.50, 80),
 		("green_apple","produce", 0.80, 50),
@@ -34,6 +42,7 @@ VALUES ("pencile","office", 2.50, 100),
 		("windex","cleaning", 2.65, 100),
 		("kvas","drinks", 2.99, 60);
 
+
 SELECT * FROM products;
 
-
+SELECT * FROM departments;
